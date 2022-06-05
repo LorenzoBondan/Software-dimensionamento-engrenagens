@@ -120,3 +120,4 @@ C:\Users\lorenzobondan\Documents\PSM2\PSM2\PSM2\PSM2\bin\Debug\Bunifu.UI.WinForm
 C:\Users\lorenzobondan\Documents\PSM2\PSM2\PSM2\PSM2\bin\Debug\Bunifu.UI.WinForms.BunifuProgressBar.xml
 C:\Users\lorenzobondan\Documents\PSM2\PSM2\PSM2\PSM2\bin\Debug\Bunifu.UI.WinForms.BunifuTransition.dll
 C:\Users\lorenzobondan\Documents\PSM2\PSM2\PSM2\PSM2\bin\Debug\Bunifu.UI.WinForms.BunifuTransition.xml
+C:\Users\lorenzobondan\Documents\PSM2\PSM2\PSM2\PSM2\obj\Debug\PSM2.frmTabelaJSaida.resources

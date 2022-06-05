@@ -17,6 +17,8 @@ namespace PSM2
         public string Texto;
 
         public double WtSaida;
+        public double ns;
+        public double i78;
 
         public int limiteinferior;
         public int limitesuperior;
@@ -30,6 +32,7 @@ namespace PSM2
         public double dm;
 
         public double vida;
+        public double vidaSaida;
 
         public double Ks = 0;
         public double KsSaida = 0;
@@ -37,6 +40,7 @@ namespace PSM2
         public double Km2 = 0;
 
         public double kl = 0;
+        public double klsaida = 0;
 
         public double CL;
         public double KT;
@@ -137,11 +141,11 @@ namespace PSM2
             txtTs.Text = Ts.ToString("F4");
 
             // ns = Rotação de Entrada / mG
-            double ns = double.Parse(txtRotacaoEntrada.Text) / mG;
+            ns = double.Parse(txtRotacaoEntrada.Text) / mG;
             txtns.Text = ns.ToString("F4");
 
             // i 7,8 = N8/N7
-            double i78 = double.Parse(txtN7.Text) / double.Parse(txtN8.Text);
+            i78 = double.Parse(txtN7.Text) / double.Parse(txtN8.Text);
             txti78.Text = i78.ToString("F4");
 
             // T4 = Ts / i 7,8
@@ -473,13 +477,21 @@ namespace PSM2
             double WtSaida = (2 * Ts1 * 1000) / (mt * double.Parse(txtN8.Text));
             txtWtSaida.Text = WtSaida.ToString("F4");
 
+            // Vida Saída
+            vidaSaida = (ns * i78) * 60 * 25000;
+            txtVidaSaida.Text = vidaSaida.ToString("F4");
+
+            // Kl saida
+            klsaida = 1.6831 * Math.Pow(vidaSaida, -0.0323);
+            txtKLSaida.Text = klsaida.ToString("F4");
+
             // sigmaB  <<<<----- 120 (?)
             double sigmaBSaida = ( WtSaida / ( mt * 120 * double.Parse(txtJSaida.Text)) ) * 
                 (double.Parse(txtKaSaida.Text) * Km2 * KsSaida * 1 * 1 / 1) ;
             txtSigmaBSaida.Text = sigmaBSaida.ToString("F4");
 
             // Sfb
-            double SfbSaida = kl * double.Parse(txtSfBLinhaSaida.Text);
+            double SfbSaida = klsaida * double.Parse(txtSfBLinhaSaida.Text);
             txtSfbSaida.Text = SfbSaida.ToString("F4");
 
             // CS
@@ -601,13 +613,17 @@ namespace PSM2
             double I = (Math.Cos(tan * Math.PI / 180)) / (((1 / rop) + (1 / rog)) * dpSaidaC * mN);
             txtISaidaC.Text = I.ToString("F4");
 
+            // CL Saida
+            double CLSaida = 2.466 * Math.Pow(vidaSaida, -0.056);
+            txtCLSaida.Text = CLSaida.ToString("F4");
+
             // SigmaC
             double sigmaCSaidaC = double.Parse(txtCp.Text) * Math.Sqrt( (WtSaida / (double.Parse(txtFSaidaC.Text) * I * dpSaidaC)) * (double.Parse(txtKaSaida.Text) * Km2 * 
                 KsSaida * double.Parse(txtKfSaida.Text) / double.Parse(txtKvSaida.Text)  ));
             txtSigmaCSaidaC.Text = sigmaCSaidaC.ToString("F4");
 
             // Sfc
-            double SfcSaidaC = (CL * double.Parse(txtCH.Text) * double.Parse(txtSfcLinhaSaidaC.Text)) / (KT * double.Parse(cbKR.Text));
+            double SfcSaidaC = (CLSaida * double.Parse(txtCH.Text) * double.Parse(txtSfcLinhaSaidaC.Text)) / (KT * double.Parse(cbKR.Text));
             txtSfcSaidaC.Text = SfcSaidaC.ToString("F4");
 
             // CS
@@ -662,8 +678,8 @@ namespace PSM2
 
             this.dataGridView1.Rows.Add("Aço", "A1-A5", "Endurecimento Completo", "<= 180 HB", "170 - 590 MPa");
             this.dataGridView2.Rows.Add("Aço", "A1-A5", "Endurecimento Completo", "<= 180 HB", "170 - 590 MPa");
-            this.dataGridView3.Rows.Add("Aço", "A1-A5", "Endurecimento por chama ou indução", "Tipo A padronizado 50-55 HRC", "310 - 380 MPa");
-            this.dataGridView4.Rows.Add("Aço", "A1-A5", "Endurecimento por chama ou indução", "50 HRC", "1200 - 1300 MPa");
+            this.dataGridView3.Rows.Add("Aço", "A1-A5", "Nitroliza", "Nitretado", "90 HR15N", "280 MPa");
+            this.dataGridView4.Rows.Add("Aço", "A1-A5", "Nitroliza", "Nitretado", "90 HR15N", "1340 MPa");
 
             pictureBox5.Parent = imgFundo1;
             bunifuSeparator42.Parent = panel2;
@@ -916,7 +932,7 @@ namespace PSM2
 
         private void btnJSaida_Click(object sender, EventArgs e)
         {
-            frmTabelaJ m = new frmTabelaJ();
+            frmTabelaJSaida m = new frmTabelaJSaida();
             m.Show();
         }
 
